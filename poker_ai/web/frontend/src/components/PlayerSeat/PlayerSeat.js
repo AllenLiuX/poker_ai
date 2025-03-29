@@ -61,7 +61,7 @@ function PlayerSeat({
         {player.hole_cards && player.hole_cards.length > 0 && (showCards || player.is_human) ? (
           <div className="hole-cards">
             {player.hole_cards.map((card, index) => (
-              <Card key={index} card={card} style={{display: 'inline-block', marginRight: '10px'}} />
+              <Card key={index} card={card} />
             ))}
           </div>
         ) : player.hole_cards && player.hole_cards.length > 0 ? (

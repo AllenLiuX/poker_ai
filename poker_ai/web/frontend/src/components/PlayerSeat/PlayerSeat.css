@@ -149,22 +149,51 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  margin-top: 5px;
+  margin-top: 10px;
+}
+
+.hole-cards {
+  display: flex !important;
+  flex-direction: row !important;
+  justify-content: center !important;
+  align-items: center !important;
+  gap: 8px !important;
+  margin: 5px auto !important;
+  width: 100% !important;
 }
 
 .card-backs {
   display: flex;
+  flex-direction: row;
   gap: 5px;
+  justify-content: center;
 }
 
 .card-back {
   width: 40px;
-  height: 60px;
+  height: 56px;
+  background-color: #1E3A8A;
   border-radius: 5px;
-  background-color: #e94560;
-  background-image: linear-gradient(45deg, #e94560 25%, #d13354 25%, #d13354 50%, #e94560 50%, #e94560 75%, #d13354 75%, #d13354 100%);
-  background-size: 10px 10px;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+  position: relative;
+  overflow: hidden;
+}
+
+.card-back::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: repeating-linear-gradient(
+    45deg,
+    #1E3A8A,
+    #1E3A8A 5px,
+    #2563EB 5px,
+    #2563EB 10px
+  );
+  opacity: 0.5;
 }
 
 .thinking-indicator {
@@ -310,10 +339,9 @@
   /* Fix for the human player's cards */
   .player-position:nth-child(7) .player-cards {
     display: flex;
-    flex-direction: row !important; /* Force cards to be side by side */
+    flex-direction: column !important; /* Column for the container */
     justify-content: center;
     align-items: center;
-    gap: 10px; /* Increase gap between cards for better visibility */
     margin-top: 8px;
     position: relative;
     z-index: 50; /* Ensure cards are above other elements */
@@ -353,20 +381,18 @@
     width: 100% !important;
   }
   
-  /* Ensure cards are fully visible */
-  .player-cards .card {
-    position: relative;
-    z-index: 10;
-  }
-  
-  /* Make sure hole cards are visible and not cut off */
-  .hole-cards {
-    display: flex;
-    flex-direction: row !important;
-    justify-content: center;
-    gap: 8px;
-    margin-top: 5px;
-    position: relative;
-    z-index: 10;
+  /* Desktop-specific styles */
+  @media (min-width: 769px) {
+    .player-position:nth-child(7) .hole-cards {
+      display: flex !important;
+      flex-direction: row !important;
+      justify-content: center !important;
+      gap: 10px !important;
+    }
+    
+    .player-position:nth-child(7) .card {
+      display: inline-block !important;
+      margin: 0 5px !important;
+    }
   }
 }

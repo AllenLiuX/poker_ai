@@ -127,24 +127,33 @@ function PokerTable({ gameId, humanPlayerId, gameState, onGameStateUpdated, onAc
   
   // Get player position on the table
   const getPlayerPosition = (index, totalPlayers) => {
+    // Find the human player index
+    const humanIndex = gameState.players.findIndex(player => player.is_human);
+    
+    // If this is the human player, always position at bottom middle
+    if (index === humanIndex) {
+      return { 
+        bottom: '10px', 
+        left: '50%', 
+        transform: 'translateX(-50%)',
+        position: 'absolute'
+      };
+    }
+    
     const positions = {
       2: [
-        { bottom: '10%', left: '50%', transform: 'translateX(-50%)' }, // bottom (human)
         { top: '10%', left: '50%', transform: 'translateX(-50%)' }     // top
       ],
       3: [
-        { bottom: '10%', left: '50%', transform: 'translateX(-50%)' }, // bottom (human)
         { top: '10%', left: '25%', transform: 'translateX(-50%)' },    // top left
         { top: '10%', left: '75%', transform: 'translateX(-50%)' }     // top right
       ],
       4: [
-        { bottom: '10%', left: '50%', transform: 'translateX(-50%)' }, // bottom (human)
         { top: '50%', right: '10%', transform: 'translateY(-50%)' },   // right
         { top: '10%', left: '50%', transform: 'translateX(-50%)' },    // top
         { top: '50%', left: '10%', transform: 'translateY(-50%)' }     // left
       ],
       6: [
-        { bottom: '10%', left: '50%', transform: 'translateX(-50%)' }, // bottom (human)
         { bottom: '25%', right: '10%', transform: 'translateY(-50%)' }, // bottom right
         { top: '25%', right: '10%', transform: 'translateY(-50%)' },    // top right
         { top: '10%', left: '50%', transform: 'translateX(-50%)' },     // top
@@ -152,7 +161,6 @@ function PokerTable({ gameId, humanPlayerId, gameState, onGameStateUpdated, onAc
         { bottom: '25%', left: '10%', transform: 'translateY(-50%)' }   // bottom left
       ],
       8: [
-        { bottom: '10%', left: '50%', transform: 'translateX(-50%)' },  // bottom (human)
         { bottom: '15%', right: '20%', transform: 'translateY(-50%)' }, // bottom right
         { right: '10%', top: '50%', transform: 'translateY(-50%)' },    // right
         { top: '15%', right: '20%', transform: 'translateY(-50%)' },    // top right
@@ -163,9 +171,15 @@ function PokerTable({ gameId, humanPlayerId, gameState, onGameStateUpdated, onAc
       ]
     };
     
+    // Adjust index to skip the human player
+    let adjustedIndex = index;
+    if (humanIndex !== -1 && index > humanIndex) {
+      adjustedIndex -= 1;
+    }
+    
     // Default to 6 positions if not defined
     const tablePositions = positions[totalPlayers] || positions[6];
-    return tablePositions[index];
+    return tablePositions[adjustedIndex < tablePositions.length ? adjustedIndex : 0];
   };
   
   // Calculate the hand strength (placeholder - would be provided by backend)

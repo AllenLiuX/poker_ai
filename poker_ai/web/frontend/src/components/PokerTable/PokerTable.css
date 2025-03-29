@@ -126,6 +126,16 @@
   z-index: 10;
 }
 
+/* Human player position - ensure it's at the bottom middle on all devices */
+.player-position:nth-child(7) {
+  position: absolute !important;
+  bottom: 10px !important;
+  left: 50% !important;
+  top: auto !important;
+  transform: translateX(-50%) !important;
+  z-index: 30 !important;
+}
+
 .community-cards {
   position: absolute;
   top: 50%;
@@ -208,6 +218,16 @@
     border: 1px solid #4CAF50;
     padding: 5px 10px;
     border-radius: 15px;
+  }
+  
+  /* Ensure human player is at the bottom middle */
+  .player-position:nth-child(7) {
+    position: absolute !important;
+    bottom: 10px !important;
+    left: 50% !important;
+    top: auto !important;
+    transform: translateX(-50%) !important;
+    z-index: 30 !important;
   }
   
   .left-sidebar, .right-sidebar {
@@ -306,15 +326,6 @@
   .player-position:nth-child(6) { /* Bottom-right player */
     left: 75% !important;
     top: 85% !important;
-  }
-  
-  .player-position:nth-child(7) { /* Human player (bottom) */
-    position: absolute;
-    left: 50% !important;
-    bottom: 5px !important;
-    top: auto !important; /* Override any top positioning */
-    transform: translateX(-50%); /* Center horizontally */
-    z-index: 30; /* Ensure human player is above other elements */
   }
   
   .player-position:nth-child(8) { /* Bottom-left player */
