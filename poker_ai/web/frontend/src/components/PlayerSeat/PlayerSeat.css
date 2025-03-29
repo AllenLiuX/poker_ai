@@ -100,7 +100,10 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+}
+
+.avatar-icon {
+  color: #ffffff;
 }
 
 .avatar-icon.human {
@@ -118,16 +121,14 @@
 .player-name {
   font-weight: bold;
   color: #ffffff;
-  font-size: 1rem;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
+  margin-bottom: 4px;
+  font-size: 0.9rem;
 }
 
 .player-stack {
   color: #4ecca3;
+  font-size: 0.85rem;
   font-weight: bold;
-  font-size: 0.9rem;
 }
 
 .player-bet {
@@ -141,22 +142,14 @@
   border-radius: 15px;
   font-size: 0.8rem;
   font-weight: bold;
-  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
 }
 
 .player-cards {
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 5px;
-  margin-top: 10px;
-  position: relative;
-}
-
-.player-cards > div:first-child {
-  display: flex;
-  flex-direction: row;
-  gap: 5px;
+  margin-top: 5px;
 }
 
 .card-backs {
@@ -165,56 +158,27 @@
 }
 
 .card-back {
-  width: 60px;
-  height: 84px;
+  width: 40px;
+  height: 60px;
   border-radius: 5px;
-  background-color: #0f3460;
-  background-image: linear-gradient(45deg, #0a2a4e 25%, transparent 25%, transparent 50%, #0a2a4e 50%, #0a2a4e 75%, transparent 75%, transparent);
+  background-color: #e94560;
+  background-image: linear-gradient(45deg, #e94560 25%, #d13354 25%, #d13354 50%, #e94560 50%, #e94560 75%, #d13354 75%, #d13354 100%);
   background-size: 10px 10px;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
-  border: 1px solid #e94560;
-}
-
-.last-action {
-  position: absolute;
-  bottom: -20px;
-  left: 50%;
-  transform: translateX(-50%);
-  background-color: #16213e;
-  color: #e2e2e2;
-  padding: 3px 8px;
-  border-radius: 15px;
-  font-size: 0.7rem;
-  display: flex;
-  align-items: center;
-  gap: 5px;
-  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
-}
-
-.action-icon {
-  color: #ffbd69;
 }
 
 .thinking-indicator {
-  position: relative;
-  background-color: rgba(22, 33, 62, 0.9);
-  color: #e2e2e2;
-  padding: 5px 10px;
-  border-radius: 15px;
-  font-size: 0.8rem;
   display: flex;
   align-items: center;
-  justify-content: center;
   gap: 5px;
-  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
   margin-top: 8px;
-  width: fit-content;
-  align-self: center;
+  color: #ffc107;
+  font-size: 0.8rem;
+  animation: thinking 1.5s infinite;
 }
 
 .thinking-icon {
-  color: #e94560;
-  animation: spin 1.5s linear infinite;
+  animation: spin 2s linear infinite;
 }
 
 @keyframes spin {
@@ -226,55 +190,110 @@
   }
 }
 
+@keyframes thinking {
+  0% {
+    opacity: 0.5;
+  }
+  50% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0.5;
+  }
+}
+
+.last-action {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  margin-top: 8px;
+  color: #e0e0e0;
+  font-size: 0.75rem;
+  background-color: rgba(0, 0, 0, 0.2);
+  padding: 3px 8px;
+  border-radius: 12px;
+  width: fit-content;
+  margin: 8px auto 0;
+}
+
+.action-icon {
+  color: #e0e0e0;
+}
+
 /* Mobile-specific styles */
 @media (max-width: 768px) {
   .player-seat {
+    width: 120px;
     padding: 8px;
-    width: 140px;
-    transform: scale(0.85);
+    border-width: 1px;
+    border-radius: 6px;
   }
   
   .player-info {
-    gap: 5px;
+    gap: 6px;
+    margin-bottom: 6px;
   }
   
   .player-avatar {
-    width: 30px;
-    height: 30px;
+    width: 28px;
+    height: 28px;
+  }
+  
+  .avatar-icon {
+    width: 16px;
+    height: 16px;
   }
   
   .player-name {
-    font-size: 0.85rem;
+    font-size: 0.75rem;
+    margin-bottom: 2px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
   }
   
   .player-stack {
-    font-size: 0.85rem;
-  }
-  
-  .player-cards {
-    gap: 3px;
-    margin-top: 5px;
-  }
-  
-  .player-action {
-    font-size: 0.8rem;
-    padding: 3px 6px;
-    margin-top: 5px;
-  }
-  
-  .player-bet {
-    font-size: 0.8rem;
-    padding: 2px 5px;
-  }
-  
-  .dealer-button {
-    width: 20px;
-    height: 20px;
     font-size: 0.7rem;
   }
   
-  .player-status {
-    font-size: 0.75rem;
-    padding: 3px 6px;
+  .player-bet {
+    top: -18px;
+    padding: 2px 6px;
+    font-size: 0.7rem;
+    border-radius: 10px;
+  }
+  
+  .position-indicator {
+    width: 22px;
+    height: 22px;
+    font-size: 0.7rem;
+    top: -8px;
+    right: -8px;
+  }
+  
+  .card-back {
+    width: 30px;
+    height: 45px;
+  }
+  
+  .thinking-indicator {
+    font-size: 0.7rem;
+    margin-top: 5px;
+  }
+  
+  .thinking-icon {
+    width: 12px;
+    height: 12px;
+  }
+  
+  .last-action {
+    font-size: 0.65rem;
+    padding: 2px 6px;
+    margin-top: 5px;
+  }
+  
+  .action-icon {
+    width: 10px;
+    height: 10px;
   }
 }

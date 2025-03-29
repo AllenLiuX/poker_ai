@@ -73,20 +73,29 @@
 /* Mobile-specific styles */
 @media (max-width: 768px) {
   .pot-display {
-    padding: 8px;
-    min-width: 120px;
-    transform: scale(0.85);
-    background-color: rgba(15, 52, 96, 0.7);
+    padding: 10px;
+    min-width: 150px;
+    background-color: rgba(33, 33, 33, 0.85);
+    border-radius: 6px;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.5);
+    position: absolute;
+    top: 30%;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 30;
   }
   
   .pot-label {
     font-size: 0.8rem;
     gap: 4px;
     margin-bottom: 2px;
+    color: #ffffff;
   }
   
   .pot-amount {
-    font-size: 1.3rem;
+    font-size: 1.5rem;
+    color: #4CAF50;
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.5);
   }
   
   .side-pots {
@@ -95,11 +104,11 @@
     padding-top: 5px;
   }
   
-  .side-pot-label {
-    font-size: 0.75rem;
+  .side-pot {
+    background-color: rgba(33, 33, 33, 0.8);
   }
   
-  .side-pot-amount {
-    font-size: 1rem;
+  .pot-eligible {
+    font-size: 0.7rem;
   }
 }

@@ -189,53 +189,152 @@
   
   .left-sidebar, .right-sidebar {
     width: 100%;
-    max-height: 150px;
+    max-height: 120px;
     overflow-y: auto;
+    padding: 8px;
   }
   
   .poker-table {
-    height: 400px;
-    min-height: 300px;
-    max-height: 400px;
+    height: 350px;
+    min-height: 350px;
+    max-height: 350px;
     margin: 10px;
-    border-width: 10px;
-  }
-  
-  .table-footer {
-    padding: 10px;
-    min-height: 80px;
+    border-width: 8px;
+    border-radius: 100px;
   }
   
   .community-cards {
+    top: 45%;
     gap: 5px;
+    background-color: rgba(33, 33, 33, 0.7);
+    padding: 8px;
+    border-radius: 8px;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
   }
   
+  .table-header {
+    padding: 8px 12px;
+    min-height: 50px;
+  }
+  
+  .table-footer {
+    padding: 8px;
+    min-height: 80px;
+  }
+  
+  .game-info {
+    margin-top: 10px;
+    padding: 10px;
+  }
+  
+  .blinds-info {
+    margin: 10px 0;
+  }
+  
+  .blind-item {
+    margin-bottom: 5px;
+    font-size: 0.8rem;
+  }
+  
+  .hand-info {
+    margin-top: 10px;
+    padding-top: 10px;
+  }
+  
+  .hand-label {
+    font-size: 0.8rem;
+  }
+  
+  /* Adjust player positions for mobile */
   .player-position {
     transform: scale(0.85);
   }
   
+  .player-position:nth-child(1) { /* Left player */
+    left: 5% !important;
+    top: 50% !important;
+  }
+  
+  .player-position:nth-child(2) { /* Top-left player */
+    left: 25% !important;
+    top: 15% !important;
+  }
+  
+  .player-position:nth-child(3) { /* Top player */
+    left: 50% !important;
+    top: 10% !important;
+  }
+  
+  .player-position:nth-child(4) { /* Top-right player */
+    left: 75% !important;
+    top: 15% !important;
+  }
+  
+  .player-position:nth-child(5) { /* Right player */
+    left: 95% !important;
+    top: 50% !important;
+  }
+  
+  .player-position:nth-child(6) { /* Bottom-right player */
+    left: 75% !important;
+    top: 85% !important;
+  }
+  
+  .player-position:nth-child(7) { /* Bottom player (human) */
+    left: 50% !important;
+    top: 90% !important;
+  }
+  
+  .player-position:nth-child(8) { /* Bottom-left player */
+    left: 25% !important;
+    top: 85% !important;
+  }
+  
+  .pot-display-container {
+    top: 25%;
+    z-index: 5;
+  }
+}
+
+/* Improve action controls for mobile */
+@media (max-width: 768px) {
   .action-controls {
     padding: 8px;
   }
   
+  .action-title {
+    font-size: 0.9rem;
+    margin-bottom: 6px;
+  }
+  
   .action-button {
-    padding: 6px 10px;
+    padding: 8px;
     font-size: 0.8rem;
   }
   
   .bet-control-row {
     flex-wrap: wrap;
-    justify-content: space-between;
+    gap: 5px;
   }
   
   .bet-amount-display {
     min-width: 80px;
-    margin-bottom: 5px;
+    margin-right: 10px;
   }
   
   .bet-slider-container {
     width: 100%;
+    order: 3;
     margin: 5px 0;
+  }
+  
+  .bet-increment-buttons {
+    order: 2;
+  }
+  
+  .action-button.bet, .action-button.raise {
+    order: 1;
+    min-width: 70px;
   }
   
   .range-label {
@@ -247,20 +346,22 @@
     padding: 3px;
   }
   
-  .pot-display-container {
-    top: 25%;
-    z-index: 5;
-  }
-}
-
-/* Mobile-specific adjustments for card positions */
-@media (max-width: 768px) {
-  .community-cards {
-    top: 40%;
+  /* Make the buttons more prominent like in the second image */
+  .basic-actions {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 8px;
   }
   
-  /* Adjust the bottom player position (human player) */
-  .player-position:nth-child(7) {
-    top: 90% !important;
+  .basic-actions .action-button {
+    height: 40px;
+  }
+  
+  .action-button.check, .action-button.call {
+    background-color: #4CAF50; /* Green color like in the second image */
+  }
+  
+  .action-button.fold, .action-button.bet, .action-button.raise {
+    background-color: #F44336; /* Red color like in the second image */
   }
 }

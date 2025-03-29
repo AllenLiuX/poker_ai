@@ -110,6 +110,88 @@
 /* Mobile-specific styles */
 @media (max-width: 768px) {
   .hand-strength {
-    display: none;
+    background-color: #1a1a2e;
+    border-radius: 8px;
+    padding: 10px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+    gap: 6px;
+    margin-bottom: 10px;
+  }
+  
+  .strength-title {
+    color: #4CAF50;
+    font-size: 0.9rem;
+    margin-bottom: 3px;
+  }
+  
+  .hand-type {
+    margin-bottom: 2px;
+  }
+  
+  .label {
+    font-size: 0.8rem;
+  }
+  
+  .value {
+    font-size: 0.9rem;
+  }
+  
+  .win-probability {
+    gap: 6px;
+  }
+  
+  .probability-bar-container {
+    height: 8px;
+  }
+  
+  .probability-bar.very-strong {
+    background-color: #4CAF50;
+  }
+  
+  .probability-bar.strong {
+    background-color: #8BC34A;
+  }
+  
+  .probability-bar.medium {
+    background-color: #FFC107;
+  }
+  
+  .probability-bar.weak {
+    background-color: #FF9800;
+  }
+  
+  .probability-bar.very-weak {
+    background-color: #F44336;
+    opacity: 1;
+  }
+  
+  .probability-value {
+    min-width: 35px;
+    font-size: 0.8rem;
+  }
+  
+  .strength-advice {
+    font-size: 0.75rem;
+    margin-top: 3px;
+  }
+  
+  .advice.very-strong {
+    color: #4CAF50;
+  }
+  
+  .advice.strong {
+    color: #8BC34A;
+  }
+  
+  .advice.medium {
+    color: #FFC107;
+  }
+  
+  .advice.weak {
+    color: #FF9800;
+  }
+  
+  .advice.very-weak {
+    color: #F44336;
   }
 }

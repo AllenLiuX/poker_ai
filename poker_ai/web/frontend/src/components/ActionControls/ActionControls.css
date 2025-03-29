@@ -42,6 +42,7 @@
   align-items: center;
   justify-content: center;
   gap: 6px;
+  height: 44px;
 }
 
 .action-button:hover {
@@ -57,42 +58,43 @@
 }
 
 .fold {
-  background-color: #e94560;
+  background-color: #F44336;
 }
 
 .fold:hover {
-  background-color: #d13354;
+  background-color: #D32F2F;
 }
 
 .check {
-  background-color: #4ecca3;
-  color: #16213e;
+  background-color: #4CAF50;
+  color: white;
 }
 
 .check:hover {
-  background-color: #4ecca3;
-  color: #16213e;
+  background-color: #388E3C;
+  color: white;
 }
 
 .call {
-  background-color: #4ecca3;
-  color: #16213e;
+  background-color: #4CAF50;
+  color: white;
 }
 
 .call:hover {
-  background-color: #3db390;
+  background-color: #388E3C;
 }
 
 .bet, .raise {
-  background-color: #1a1a2e;
+  background-color: #F44336;
+  color: white;
 }
 
 .bet:hover, .raise:hover {
-  background-color: #1a1a3f;
+  background-color: #D32F2F;
 }
 
 .all-in {
-  background-color: #e94560;
+  background-color: #F44336;
   animation: pulse 1.5s infinite;
 }
 

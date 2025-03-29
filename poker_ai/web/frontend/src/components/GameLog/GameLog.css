@@ -101,3 +101,92 @@
   font-style: italic;
   padding: 20px;
 }
+
+/* Mobile-specific styles */
+@media (max-width: 768px) {
+  .game-log {
+    height: auto;
+  }
+  
+  .log-title {
+    color: #4CAF50;
+    margin-bottom: 8px;
+    font-size: 0.9rem;
+  }
+  
+  .log-entries {
+    gap: 5px;
+    max-height: 100px;
+  }
+  
+  .log-entry {
+    padding: 5px 8px;
+    border-radius: 4px;
+    font-size: 0.8rem;
+    background-color: rgba(33, 33, 33, 0.7);
+    margin-bottom: 3px;
+  }
+  
+  .log-entry.action {
+    flex-wrap: wrap;
+  }
+  
+  .log-entry.deal {
+    background-color: rgba(76, 175, 80, 0.2);
+  }
+  
+  .log-entry.showdown {
+    background-color: rgba(33, 150, 243, 0.2);
+  }
+  
+  .log-entry.hand-end {
+    background-color: rgba(244, 67, 54, 0.2);
+  }
+  
+  .player-name {
+    font-size: 0.8rem;
+  }
+  
+  .action-type {
+    font-size: 0.75rem;
+  }
+  
+  .deal-type {
+    color: #4CAF50;
+    margin-right: 5px;
+    font-size: 0.8rem;
+  }
+  
+  .cards {
+    font-size: 0.75rem;
+  }
+  
+  .showdown-title {
+    color: #2196F3;
+    margin-bottom: 3px;
+    font-size: 0.8rem;
+  }
+  
+  .pot-distribution {
+    margin-top: 3px;
+  }
+  
+  .winner-name {
+    color: #F44336;
+    font-size: 0.8rem;
+  }
+  
+  .hand-description {
+    font-size: 0.75rem;
+  }
+  
+  .reason {
+    margin-top: 3px;
+    font-size: 0.75rem;
+  }
+  
+  .empty-log {
+    padding: 10px;
+    font-size: 0.8rem;
+  }
+}
