@@ -1,0 +1,108 @@
+.hand-strength {
+  background-color: rgba(15, 52, 96, 0.5);
+  border-radius: 10px;
+  padding: 15px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.strength-title {
+  color: #e94560;
+  margin: 0;
+  text-align: center;
+  margin-bottom: 5px;
+}
+
+.hand-type {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.label {
+  color: #e2e2e2;
+  font-size: 0.9rem;
+}
+
+.value {
+  color: #ffffff;
+  font-weight: bold;
+}
+
+.win-probability {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.probability-bar-container {
+  flex: 1;
+  height: 10px;
+  background-color: rgba(226, 226, 226, 0.2);
+  border-radius: 5px;
+  overflow: hidden;
+}
+
+.probability-bar {
+  height: 100%;
+  border-radius: 5px;
+  transition: width 0.3s ease;
+}
+
+.probability-bar.very-strong {
+  background-color: #4ecca3;
+}
+
+.probability-bar.strong {
+  background-color: #ffbd69;
+}
+
+.probability-bar.medium {
+  background-color: #7b2cbf;
+}
+
+.probability-bar.weak {
+  background-color: #e94560;
+}
+
+.probability-bar.very-weak {
+  background-color: #e94560;
+  opacity: 0.7;
+}
+
+.probability-value {
+  font-weight: bold;
+  color: #ffffff;
+  min-width: 40px;
+  text-align: right;
+}
+
+.strength-advice {
+  margin-top: 5px;
+  font-size: 0.85rem;
+  font-style: italic;
+  text-align: center;
+}
+
+.advice.very-strong {
+  color: #4ecca3;
+}
+
+.advice.strong {
+  color: #ffbd69;
+}
+
+.advice.medium {
+  color: #7b2cbf;
+}
+
+.advice.weak {
+  color: #e94560;
+}
+
+.advice.very-weak {
+  color: #e94560;
+  opacity: 0.7;
+}

@@ -1,0 +1,83 @@
+.game-settings {
+  position: relative;
+  margin-bottom: 15px;
+}
+
+.settings-toggle {
+  background-color: #0f3460;
+  color: #ffffff;
+  border: none;
+  border-radius: 5px;
+  padding: 8px 15px;
+  font-size: 0.9rem;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.settings-toggle:hover {
+  background-color: #0a2a4e;
+}
+
+.settings-panel {
+  position: absolute;
+  top: 100%;
+  right: 0;
+  width: 300px;
+  background-color: #16213e;
+  border-radius: 10px;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+  padding: 15px;
+  margin-top: 10px;
+  z-index: 100;
+}
+
+.settings-title {
+  color: #e94560;
+  margin-top: 0;
+  margin-bottom: 15px;
+  text-align: center;
+}
+
+.settings-info {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.info-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.info-label {
+  color: #e2e2e2;
+  font-size: 0.9rem;
+}
+
+.info-value {
+  color: #ffffff;
+  font-weight: bold;
+}
+
+.settings-actions {
+  margin-top: 20px;
+  display: flex;
+  justify-content: center;
+}
+
+.end-game-button {
+  background-color: #e94560;
+  color: #ffffff;
+  border: none;
+  border-radius: 5px;
+  padding: 10px 20px;
+  font-size: 0.9rem;
+  font-weight: bold;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.end-game-button:hover {
+  background-color: #d13354;
+}

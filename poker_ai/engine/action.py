@@ -63,6 +63,7 @@ class BettingRound(Enum):
     FLOP = auto()
     TURN = auto()
     RIVER = auto()
+    SHOWDOWN = auto()
     
     @classmethod
     def next_round(cls, current_round: "BettingRound") -> Optional["BettingRound"]:
@@ -73,4 +74,6 @@ class BettingRound(Enum):
             return cls.TURN
         elif current_round == cls.TURN:
             return cls.RIVER
-        return None  # No next round after the river
+        elif current_round == cls.RIVER:
+            return cls.SHOWDOWN
+        return None  # No next round after showdown

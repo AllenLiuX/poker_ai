@@ -2,3 +2,27 @@ logs/
 venv/
 results/
 __pycache__/
+
+# Frontend
+poker_ai/web/frontend/node_modules/
+poker_ai/web/frontend/build/
+poker_ai/web/frontend/.env
+poker_ai/web/frontend/.env.local
+poker_ai/web/frontend/.env.development.local
+poker_ai/web/frontend/.env.test.local
+poker_ai/web/frontend/.env.production.local
+poker_ai/web/frontend/npm-debug.log*
+poker_ai/web/frontend/yarn-debug.log*
+poker_ai/web/frontend/yarn-error.log*
+
+# Backend
+poker_ai/web/backend/__pycache__/
+poker_ai/web/backend/*.pyc
+poker_ai/web/backend/.env
+poker_ai/web/backend/.env.local
+
+# IDE files
+.idea/
+.vscode/
+*.swp
+*.swo

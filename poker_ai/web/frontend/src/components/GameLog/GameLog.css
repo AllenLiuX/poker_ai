@@ -1,0 +1,103 @@
+.game-log {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+.log-title {
+  color: #e94560;
+  margin-top: 0;
+  margin-bottom: 15px;
+  text-align: center;
+}
+
+.log-entries {
+  flex: 1;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.log-entry {
+  padding: 8px 12px;
+  border-radius: 5px;
+  background-color: rgba(15, 52, 96, 0.5);
+  font-size: 0.9rem;
+}
+
+.log-entry.action {
+  display: flex;
+  justify-content: space-between;
+}
+
+.log-entry.deal {
+  background-color: rgba(78, 204, 163, 0.2);
+  text-align: center;
+}
+
+.log-entry.showdown {
+  background-color: rgba(123, 44, 191, 0.2);
+}
+
+.log-entry.hand-end {
+  background-color: rgba(233, 69, 96, 0.2);
+  text-align: center;
+}
+
+.player-name {
+  font-weight: bold;
+  color: #ffffff;
+}
+
+.action-type {
+  color: #e2e2e2;
+}
+
+.deal-type {
+  font-weight: bold;
+  color: #4ecca3;
+  margin-right: 10px;
+}
+
+.cards {
+  color: #ffffff;
+}
+
+.showdown-title {
+  display: block;
+  font-weight: bold;
+  color: #7b2cbf;
+  margin-bottom: 5px;
+  text-align: center;
+}
+
+.pot-distribution {
+  margin-top: 5px;
+  text-align: center;
+}
+
+.winner-name {
+  font-weight: bold;
+  color: #e94560;
+}
+
+.hand-description {
+  display: block;
+  color: #e2e2e2;
+  font-style: italic;
+}
+
+.reason {
+  display: block;
+  color: #e2e2e2;
+  font-style: italic;
+  margin-top: 5px;
+}
+
+.empty-log {
+  text-align: center;
+  color: #e2e2e2;
+  font-style: italic;
+  padding: 20px;
+}

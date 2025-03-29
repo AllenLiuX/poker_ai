@@ -1,0 +1,219 @@
+.player-seat {
+  position: relative;
+  background-color: rgba(15, 52, 96, 0.7);
+  border-radius: 10px;
+  padding: 15px;
+  width: 180px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+  transition: all 0.3s ease;
+  border: 2px solid transparent;
+}
+
+.player-seat.active {
+  border-color: #e94560;
+  box-shadow: 0 0 15px rgba(233, 69, 96, 0.5);
+  animation: pulse 1.5s infinite;
+}
+
+.player-seat.folded {
+  opacity: 0.6;
+}
+
+.player-seat.all-in {
+  border-color: #7b2cbf;
+  box-shadow: 0 0 15px rgba(123, 44, 191, 0.5);
+}
+
+.player-seat.winner {
+  border-color: #4ecca3;
+  box-shadow: 0 0 20px rgba(78, 204, 163, 0.7);
+  animation: winner-pulse 1.5s infinite;
+}
+
+@keyframes pulse {
+  0% {
+    box-shadow: 0 0 15px rgba(233, 69, 96, 0.5);
+  }
+  50% {
+    box-shadow: 0 0 25px rgba(233, 69, 96, 0.8);
+  }
+  100% {
+    box-shadow: 0 0 15px rgba(233, 69, 96, 0.5);
+  }
+}
+
+@keyframes winner-pulse {
+  0% {
+    box-shadow: 0 0 15px rgba(78, 204, 163, 0.5);
+  }
+  50% {
+    box-shadow: 0 0 25px rgba(78, 204, 163, 0.8);
+  }
+  100% {
+    box-shadow: 0 0 15px rgba(78, 204, 163, 0.5);
+  }
+}
+
+.position-indicator {
+  position: absolute;
+  top: -10px;
+  right: -10px;
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: bold;
+  font-size: 0.8rem;
+  z-index: 10;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
+}
+
+.position-indicator.dealer {
+  background-color: #ffffff;
+  color: #16213e;
+}
+
+.position-indicator.small-blind {
+  background-color: #4ecca3;
+  color: #16213e;
+}
+
+.position-indicator.big-blind {
+  background-color: #e94560;
+  color: #ffffff;
+}
+
+.player-info {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 10px;
+}
+
+.player-avatar {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background-color: #16213e;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+}
+
+.avatar-icon.human {
+  color: #4ecca3;
+}
+
+.avatar-icon.ai {
+  color: #e94560;
+}
+
+.player-details {
+  flex: 1;
+}
+
+.player-name {
+  font-weight: bold;
+  color: #ffffff;
+  font-size: 1rem;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.player-stack {
+  color: #4ecca3;
+  font-weight: bold;
+  font-size: 0.9rem;
+}
+
+.player-bet {
+  position: absolute;
+  top: -25px;
+  left: 50%;
+  transform: translateX(-50%);
+  background-color: #e94560;
+  color: white;
+  padding: 3px 8px;
+  border-radius: 15px;
+  font-size: 0.8rem;
+  font-weight: bold;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
+}
+
+.player-cards {
+  display: flex;
+  justify-content: center;
+  gap: 5px;
+  margin-top: 10px;
+}
+
+.card-backs {
+  display: flex;
+  gap: 5px;
+}
+
+.card-back {
+  width: 60px;
+  height: 84px;
+  border-radius: 5px;
+  background-color: #0f3460;
+  background-image: linear-gradient(45deg, #0a2a4e 25%, transparent 25%, transparent 50%, #0a2a4e 50%, #0a2a4e 75%, transparent 75%, transparent);
+  background-size: 10px 10px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+  border: 1px solid #e94560;
+}
+
+.last-action {
+  position: absolute;
+  bottom: -20px;
+  left: 50%;
+  transform: translateX(-50%);
+  background-color: #16213e;
+  color: #e2e2e2;
+  padding: 3px 8px;
+  border-radius: 15px;
+  font-size: 0.7rem;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
+}
+
+.action-icon {
+  color: #ffbd69;
+}
+
+.thinking-indicator {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background-color: rgba(22, 33, 62, 0.9);
+  color: #e2e2e2;
+  padding: 8px 15px;
+  border-radius: 20px;
+  font-size: 0.8rem;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.5);
+  z-index: 10;
+}
+
+.thinking-icon {
+  color: #e94560;
+  animation: spin 1.5s linear infinite;
+}
+
+@keyframes spin {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
