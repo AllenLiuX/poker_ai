@@ -256,59 +256,38 @@ def get_game_state_for_client(game_state, human_player_id):
     
     # Get valid actions for the human player if it's their turn
     valid_actions = []
-    if current_player and current_player.player_id == human_player_id:
+    is_human_turn = current_player and current_player.player_id == human_player_id
+    
+    if is_human_turn:
         valid_action_types = game_state.get_valid_actions(human_player)
-        
-        for action_type in valid_action_types:
-            action_data = {
-                'type': action_type.name,
-                'min_amount': 0,
-                'max_amount': 0
-            }
-            
-            if action_type == ActionType.CALL:
-                action_data['min_amount'] = game_state.current_bet - human_player.current_bet
-                action_data['max_amount'] = action_data['min_amount']
-            elif action_type == ActionType.BET:
-                action_data['min_amount'] = game_state.min_raise
-                action_data['max_amount'] = human_player.stack
-            elif action_type == ActionType.RAISE:
-                action_data['min_amount'] = game_state.min_raise
-                action_data['max_amount'] = human_player.stack
-            elif action_type == ActionType.ALL_IN:
-                action_data['min_amount'] = human_player.stack
-                action_data['max_amount'] = human_player.stack
-            
-            valid_actions.append(action_data)
+        valid_actions = [action_type.name for action_type in valid_action_types]
+    
+    # Format community cards
+    community_cards = [str(card) for card in game_state.community_cards]
     
     # Format hand history for the current hand
     formatted_history = []
-    for action in game_state.hand_history:
-        if action['type'] == 'player_action':
-            player = next((p for p in game_state.players if p.player_id == action['player_id']), None)
+    for entry in game_state.hand_history:
+        if entry['type'] == 'player_action':
+            player = next((p for p in game_state.players if p.player_id == entry['player_id']), None)
             if player:
                 formatted_history.append({
                     'type': 'action',
                     'player_name': player.name,
-                    'action': action['action'],
-                    'amount': action['amount']
+                    'action': entry['action'],
+                    'amount': entry['amount']
                 })
-        elif action['type'] in ['deal_community', 'showdown', 'hand_end']:
-            formatted_history.append({
-                'type': action['type'],
-                'data': action
-            })
     
-    # Return the formatted state
+    # Return the formatted game state
     return {
         'betting_round': game_state.betting_round.name,
         'pot': game_state.pot,
         'current_bet': game_state.current_bet,
         'min_raise': game_state.min_raise,
-        'community_cards': [str(card) for card in game_state.community_cards],
+        'community_cards': community_cards,
         'players': players_data,
         'current_player_id': current_player_id,
-        'is_human_turn': current_player and current_player.player_id == human_player_id,
+        'is_human_turn': is_human_turn,
         'valid_actions': valid_actions,
         'hand_history': formatted_history,
         'is_hand_over': game_state.is_hand_over(),

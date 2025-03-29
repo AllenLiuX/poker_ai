@@ -59,28 +59,30 @@ function PlayerSeat({
       
       <div className="player-cards">
         {player.hole_cards && player.hole_cards.length > 0 && (showCards || player.is_human) ? (
-          player.hole_cards.map((card, index) => (
-            <Card key={index} card={card} />
-          ))
+          <div>
+            {player.hole_cards.map((card, index) => (
+              <Card key={index} card={card} />
+            ))}
+          </div>
         ) : player.hole_cards && player.hole_cards.length > 0 ? (
           <div className="card-backs">
             <div className="card-back"></div>
             <div className="card-back"></div>
           </div>
         ) : null}
+        
+        {isActive && (
+          <div className="thinking-indicator">
+            <Timer size={16} className="thinking-icon" />
+            <span>Thinking...</span>
+          </div>
+        )}
       </div>
       
       {lastAction && (
         <div className="last-action">
           <Clock size={14} className="action-icon" />
           <span>{lastAction}</span>
-        </div>
-      )}
-      
-      {isActive && (
-        <div className="thinking-indicator">
-          <Timer size={16} className="thinking-icon" />
-          <span>Thinking...</span>
         </div>
       )}
     </div>
