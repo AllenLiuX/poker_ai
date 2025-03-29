@@ -18,13 +18,13 @@ from poker_ai.engine.action import Action, ActionType, BettingRound
 # Initialize Flask app
 app = Flask(__name__)
 app.secret_key = os.environ.get('SECRET_KEY', 'dev_key_for_testing')
-CORS(app, supports_credentials=True)
+CORS(app, supports_credentials=True, resources={r"/*": {"origins": "*"}})
 socketio = SocketIO(app, cors_allowed_origins="*")
 
 # Store active games
 active_games = {}
 
-@app.route('/api/game/new', methods=['POST'])
+@app.route('/game/new', methods=['POST'])
 def create_game():
     """Create a new poker game."""
     data = request.json
@@ -77,7 +77,7 @@ def create_game():
         'state': get_game_state_for_client(game_state, human_player.player_id)
     })
 
-@app.route('/api/game/<game_id>/state', methods=['GET'])
+@app.route('/game/<game_id>/state', methods=['GET'])
 def get_game_state(game_id):
     """Get the current state of a game."""
     if game_id not in active_games:
@@ -91,7 +91,7 @@ def get_game_state(game_id):
         'state': get_game_state_for_client(game_state, human_player_id)
     })
 
-@app.route('/api/game/<game_id>/action', methods=['POST'])
+@app.route('/game/<game_id>/action', methods=['POST'])
 def submit_action(game_id):
     """Submit a player action."""
     if game_id not in active_games:
