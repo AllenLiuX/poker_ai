@@ -128,7 +128,7 @@
 
 .community-cards {
   position: absolute;
-  top: 50%;
+  top: 55%;
   left: 50%;
   transform: translate(-50%, -50%);
   display: flex;
@@ -138,10 +138,10 @@
 
 .pot-display-container {
   position: absolute;
-  top: 35%;
+  top: 25%;
   left: 50%;
   transform: translate(-50%, -50%);
-  z-index: 5;
+  z-index: 25;
 }
 
 .table-footer {
@@ -204,12 +204,17 @@
   }
   
   .community-cards {
-    top: 45%;
+    top: 55%;
     gap: 5px;
     background-color: rgba(33, 33, 33, 0.7);
     padding: 8px;
     border-radius: 8px;
     box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
+  }
+  
+  .pot-display-container {
+    top: 25%;
+    z-index: 25;
   }
   
   .table-header {
@@ -262,7 +267,7 @@
   
   .player-position:nth-child(3) { /* Top player */
     left: 50% !important;
-    top: 10% !important;
+    top: 15% !important;
   }
   
   .player-position:nth-child(4) { /* Top-right player */
@@ -280,19 +285,16 @@
     top: 85% !important;
   }
   
-  .player-position:nth-child(7) { /* Bottom player (human) */
+  .player-position:nth-child(7) { /* Human player (bottom) */
     left: 50% !important;
-    top: 90% !important;
+    top: 85% !important;
+    transform: scale(0.9); /* Make human player slightly larger */
+    z-index: 30; /* Ensure human player is above other elements */
   }
   
   .player-position:nth-child(8) { /* Bottom-left player */
     left: 25% !important;
     top: 85% !important;
-  }
-  
-  .pot-display-container {
-    top: 25%;
-    z-index: 5;
   }
 }
 

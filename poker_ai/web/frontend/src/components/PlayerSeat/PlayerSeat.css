@@ -296,4 +296,42 @@
     width: 10px;
     height: 10px;
   }
+  
+  /* Special styling for human player */
+  .player-position:nth-child(7) .player-seat {
+    width: 130px;
+    padding: 10px;
+    background-color: rgba(33, 33, 33, 0.9);
+    border: 2px solid #4CAF50;
+  }
+  
+  .player-position:nth-child(7) .player-cards {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    gap: 5px;
+    margin-top: 8px;
+  }
+  
+  .player-position:nth-child(7) .card-container {
+    transform: scale(1.1);
+    transform-origin: bottom center;
+    margin-bottom: 5px;
+  }
+  
+  /* Ensure cards are fully visible */
+  .player-cards .card {
+    position: relative;
+    z-index: 10;
+  }
+  
+  /* Make sure hole cards are visible and not cut off */
+  .hole-cards {
+    display: flex;
+    justify-content: center;
+    gap: 5px;
+    margin-top: 5px;
+    position: relative;
+    z-index: 10;
+  }
 }

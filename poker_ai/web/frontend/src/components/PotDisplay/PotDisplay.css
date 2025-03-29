@@ -112,3 +112,34 @@
     font-size: 0.7rem;
   }
 }
+
+/* Additional mobile adjustments to prevent overlap */
+@media (max-width: 768px) {
+  /* Make the pot display more prominent and ensure it doesn't overlap with cards */
+  .pot-display {
+    position: absolute;
+    top: 20%; /* Move it higher up */
+    left: 50%;
+    transform: translateX(-50%);
+    background-color: rgba(33, 33, 33, 0.95);
+    border: 2px solid #4CAF50;
+    z-index: 40; /* Ensure it's above all other elements */
+    width: auto;
+    min-width: 120px;
+    max-width: 160px;
+  }
+  
+  /* Make the pot amount more visible */
+  .pot-amount {
+    font-size: 1.6rem;
+    font-weight: bold;
+    color: #4CAF50;
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.6);
+  }
+  
+  /* Add a label to make it clear what this is */
+  .pot-label span::before {
+    content: "Pot: ";
+    font-weight: bold;
+  }
+}
