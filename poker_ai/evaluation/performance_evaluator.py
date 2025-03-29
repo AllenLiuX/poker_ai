@@ -137,6 +137,19 @@ class PerformanceEvaluator:
                 self.logger.info(f"  Match ended early: One player has no chips left")
                 break
                 
+            # Check if either player has less than the big blind
+            if 0 < player1.stack < big_blind or 0 < player2.stack < big_blind:
+                self.logger.info(f"  Match ended early: One player has less than the big blind")
+                # Set the player with small stack to 0 to ensure clean termination
+                if 0 < player1.stack < big_blind:
+                    self.logger.info(f"  {player1.name} has {player1.stack:.2f} which is less than big blind {big_blind}. Eliminating player.")
+                    player1.stack = 0
+                if 0 < player2.stack < big_blind:
+                    self.logger.info(f"  {player2.name} has {player2.stack:.2f} which is less than big blind {big_blind}. Eliminating player.")
+                    player2.stack = 0
+                # End the match immediately
+                break
+                
             # Alternate button position
             if hand_num % 2 == 0:
                 button_player = player1
@@ -183,10 +196,33 @@ class PerformanceEvaluator:
             # No need to copy them manually
             
             # Main game loop
+            max_iterations = 1000  # Safety limit to prevent infinite loops
+            iteration_count = 0
             while not game.is_hand_over():
+                iteration_count += 1
+                if iteration_count > max_iterations:
+                    self.logger.warning(f"  Game terminated early after {max_iterations} iterations - possible infinite loop detected")
+                    game.hand_over = True
+                    break
+                
                 current_player = game.get_current_player()
                 if not current_player:
                     break
+                
+                # Check if a player has stack less than big blind during preflop and hasn't acted yet
+                if game.betting_round == BettingRound.PREFLOP:
+                    # Check if player1 has less than big blind and hasn't acted
+                    if 0 < player1.stack < big_blind and not p1_vpip_this_hand and not p1_pfr_this_hand:
+                        self.logger.info(f"  Player {player1.name} has stack ({player1.stack:.2f}) less than the big blind ({big_blind}) at preflop. Eliminating player.")
+                        player1.stack = 0
+                        game.hand_over = True
+                        break
+                    # Check if player2 has less than big blind and hasn't acted
+                    if 0 < player2.stack < big_blind and not p2_vpip_this_hand and not p2_pfr_this_hand:
+                        self.logger.info(f"  Player {player2.name} has stack ({player2.stack:.2f}) less than the big blind ({big_blind}) at preflop. Eliminating player.")
+                        player2.stack = 0
+                        game.hand_over = True
+                        break
                     
                 # Get valid actions
                 valid_actions = game.get_valid_actions(current_player)
@@ -305,28 +341,29 @@ class PerformanceEvaluator:
         
         return player1_profit, player2_profit, stats
     
-    def evaluate_player_configs(self, player_configs: List[Dict[str, Any]], 
-                              num_hands: int = 1000, 
-                              num_trials: int = 5) -> Dict[str, Dict[str, float]]:
+    def evaluate_player_configs(self, configs, num_hands=200, num_trials=3):
         """
-        Evaluate performance of different player configurations against each other.
+        Evaluate multiple player configurations against each other.
         
         Args:
-            player_configs: List of player configuration dictionaries
+            configs: List of player configuration dictionaries
             num_hands: Number of hands per match
             num_trials: Number of trials per matchup
             
         Returns:
-            Dictionary of performance metrics for each player
+            Tuple of (results_dict, matchups_dict)
         """
-        # Create players from configurations
+        # Create players
         players = []
-        for config in player_configs:
-            player_type = config.pop("type", "GTOPlayer")
+        for config in configs:
+            # Create a copy of the config to avoid modifying the original
+            player_config = config.copy()
+            player_type = player_config.pop("type", "GTOPlayer")
+            
             if player_type == "ExploitativePlayer":
-                players.append(ExploitativePlayer(**config))
+                players.append(ExploitativePlayer(**player_config))
             else:
-                players.append(GTOPlayer(**config))
+                players.append(GTOPlayer(**player_config))
         
         # Track results
         results = {player.name: {
@@ -441,7 +478,178 @@ class PerformanceEvaluator:
                 stats["win_rate"] = 0
         
         # Save results
-        self._save_results(results, matchups, player_configs, num_hands, num_trials)
+        self._save_results(results, matchups, configs, num_hands, num_trials)
+        
+        return results, matchups
+    
+    def evaluate_gto_vs_all(self, configs, num_hands=200, num_trials=3):
+        """
+        Evaluate GTO player against all other player configurations.
+        Only runs matchups between the first player (GTO) and all others.
+        
+        Args:
+            configs: List of player configuration dictionaries (GTO should be first)
+            num_hands: Number of hands per match
+            num_trials: Number of trials per matchup
+            
+        Returns:
+            Tuple of (results_dict, matchups_dict)
+        """
+        # Create players
+        players = []
+        for config in configs:
+            # Create a copy of the config to avoid modifying the original
+            player_config = config.copy()
+            player_type = player_config.pop("type", "GTOPlayer")
+            
+            if player_type == "ExploitativePlayer":
+                players.append(ExploitativePlayer(**player_config))
+            else:
+                players.append(GTOPlayer(**player_config))
+        
+        # Ensure first player is GTO
+        if players[0].name != "GTO Balanced":
+            self.logger.warning("First player is not GTO Balanced, results may be unexpected")
+        
+        # Track results
+        results = {player.name: {
+            "total_profit": 0, 
+            "wins": 0, 
+            "matches": 0,
+            "vpip": 0,
+            "pfr": 0,
+            "af": 0
+        } for player in players}
+        
+        # Track matchup results
+        matchups = {}
+        
+        # Run GTO vs all tournament
+        gto_player = players[0]
+        other_players = players[1:]
+        total_matchups = len(other_players)
+        matchup_count = 0
+        
+        self.logger.info(f"\nRunning {total_matchups} matchups with {num_trials} trials each...")
+        self.logger.info(f"GTO player will play against all other player types")
+        
+        for opponent in other_players:
+            matchup_count += 1
+            self.logger.info(f"\nMatchup {matchup_count}/{total_matchups}: {gto_player.name} vs {opponent.name}")
+            
+            gto_total_profit = 0
+            opponent_total_profit = 0
+            
+            matchup_stats = {
+                "player1_vpip": 0,
+                "player2_vpip": 0,
+                "player1_pfr": 0,
+                "player2_pfr": 0,
+                "player1_af": 0,
+                "player2_af": 0
+            }
+            
+            for trial in range(num_trials):
+                self.logger.info(f"  Trial {trial + 1}/{num_trials}")
+                
+                gto_profit, opponent_profit, stats = self.simulate_heads_up_match(
+                    gto_player, opponent, num_hands
+                )
+                
+                gto_total_profit += gto_profit
+                opponent_total_profit += opponent_profit
+                
+                # Handle AF calculation - it might be a list or a float
+                if isinstance(stats["player1_af"], list):
+                    # If it's a list, we need to calculate the AF value
+                    p1_aggressive = sum(stats["player1_af"])
+                    p1_passive = sum(stats["player1_passive"]) if "player1_passive" in stats else 0
+                    p1_af = p1_aggressive / p1_passive if p1_passive > 0 else 0
+                    matchup_stats["player1_af"] += p1_af
+                else:
+                    # If it's already a float, just add it
+                    matchup_stats["player1_af"] += stats["player1_af"]
+                
+                if isinstance(stats["player2_af"], list):
+                    # If it's a list, we need to calculate the AF value
+                    p2_aggressive = sum(stats["player2_af"])
+                    p2_passive = sum(stats["player2_passive"]) if "player2_passive" in stats else 0
+                    p2_af = p2_aggressive / p2_passive if p2_passive > 0 else 0
+                    matchup_stats["player2_af"] += p2_af
+                else:
+                    # If it's already a float, just add it
+                    matchup_stats["player2_af"] += stats["player2_af"]
+                
+                # Track stats
+                matchup_stats["player1_vpip"] += stats["player1_vpip"]
+                matchup_stats["player2_vpip"] += stats["player2_vpip"]
+                matchup_stats["player1_pfr"] += stats["player1_pfr"]
+                matchup_stats["player2_pfr"] += stats["player2_pfr"]
+                
+                # Track wins
+                if gto_profit > opponent_profit:
+                    results[gto_player.name]["wins"] += 1
+                elif opponent_profit > gto_profit:
+                    results[opponent.name]["wins"] += 1
+            
+            # Calculate average profits
+            gto_avg_profit = gto_total_profit / num_trials
+            opponent_avg_profit = opponent_total_profit / num_trials
+            
+            # Update results
+            results[gto_player.name]["total_profit"] += gto_avg_profit
+            results[opponent.name]["total_profit"] += opponent_avg_profit
+            results[gto_player.name]["matches"] += 1
+            results[opponent.name]["matches"] += 1
+            
+            # Calculate average stats
+            matchup_stats["player1_vpip"] /= num_trials
+            matchup_stats["player2_vpip"] /= num_trials
+            matchup_stats["player1_pfr"] /= num_trials
+            matchup_stats["player2_pfr"] /= num_trials
+            matchup_stats["player1_af"] /= num_trials
+            matchup_stats["player2_af"] /= num_trials
+            
+            # Update player stats
+            results[gto_player.name]["vpip"] += matchup_stats["player1_vpip"]
+            results[opponent.name]["vpip"] += matchup_stats["player2_vpip"]
+            results[gto_player.name]["pfr"] += matchup_stats["player1_pfr"]
+            results[opponent.name]["pfr"] += matchup_stats["player2_pfr"]
+            results[gto_player.name]["af"] += matchup_stats["player1_af"]
+            results[opponent.name]["af"] += matchup_stats["player2_af"]
+            
+            # Store matchup results
+            matchup_key = f"{gto_player.name} vs {opponent.name}"
+            matchups[matchup_key] = {
+                "player1_profit": gto_avg_profit,
+                "player2_profit": opponent_avg_profit,
+                "player1_vpip": matchup_stats["player1_vpip"],
+                "player2_vpip": matchup_stats["player2_vpip"],
+                "player1_pfr": matchup_stats["player1_pfr"],
+                "player2_pfr": matchup_stats["player2_pfr"],
+                "player1_af": matchup_stats["player1_af"],
+                "player2_af": matchup_stats["player2_af"]
+            }
+            
+            self.logger.info(f"  Matchup results: {gto_player.name} avg profit: {gto_avg_profit:.2f}, {opponent.name} avg profit: {opponent_avg_profit:.2f}")
+        
+        # Calculate final stats
+        for name, stats in results.items():
+            if stats["matches"] > 0:
+                stats["avg_profit_per_match"] = stats["total_profit"] / stats["matches"]
+                stats["win_rate"] = stats["wins"] / (stats["matches"] * num_trials)
+                stats["vpip"] = stats["vpip"] / stats["matches"]
+                stats["pfr"] = stats["pfr"] / stats["matches"]
+                stats["af"] = stats["af"] / stats["matches"]
+            else:
+                stats["avg_profit_per_match"] = 0
+                stats["win_rate"] = 0
+                stats["vpip"] = 0
+                stats["pfr"] = 0
+                stats["af"] = 0
+        
+        # Save results
+        self._save_results(results, matchups, configs, num_hands, num_trials)
         
         return results, matchups
     

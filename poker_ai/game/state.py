@@ -65,10 +65,8 @@ class GameState:
     
     def start_new_hand(self) -> None:
         """Start a new hand of poker."""
-        # Reset the deck
-        self.deck = Deck()
-        
-        # Reset game state variables
+        # Reset game state
+        self.deck = Deck(shuffled=True)
         self.community_cards = []
         self.pot = 0.0
         self.side_pots = []
@@ -76,36 +74,36 @@ class GameState:
         self.min_raise = self.big_blind
         self.betting_round = BettingRound.PREFLOP
         self.hand_over = False
-        self.hand_history = []
         self.players_acted_in_round = 0
         self.round_started = False
         
-        # Check for players with low balances
+        # Eliminate players with stacks less than the big blind
         for player in self.players:
-            if player.stack < 20:
-                logging.warning(f"Player {player.name} has a low stack: {player.stack} at start of hand")
+            if 0 < player.stack < self.big_blind:
+                logging.info(f"Player {player.name} has stack ({player.stack}) less than the big blind ({self.big_blind}). Eliminating player.")
+                player.stack = 0
         
-        # Reset player states for the new hand
+        # Move the button
+        self.button_pos = (self.button_pos + 1) % len(self.players)
+        self._assign_positions()
+        
+        # Reset player states
         for player in self.players:
             player.reset_for_new_hand()
         
-        # Move the button to the next player
-        self.button_pos = (self.button_pos + 1) % len(self.players)
-        
-        # Deal cards to players
+        # Deal hole cards
         for player in self.players:
-            player.receive_cards(self.deck.deal(2))
-            
+            if player.stack > 0:  # Only deal to players with chips
+                player.receive_cards(self.deck.deal(2))
+        
         # Post blinds and antes
         self._post_blinds_and_antes()
         
-        # Set the first player to act (after the big blind in preflop)
-        self.current_player_idx = (self.button_pos + 3) % len(self.players)
-        if len(self.players) == 2:  # Heads-up play
-            self.current_player_idx = self.button_pos  # Button acts first preflop in heads-up
-        
-        # Make sure the first player is active
-        self._move_to_next_player()
+        # Set starting player (after big blind in preflop)
+        if len(self.players) == 2:  # Heads-up
+            self.current_player_idx = self.button_pos  # Small blind acts first preflop
+        else:
+            self.current_player_idx = (self.button_pos + 3) % len(self.players)  # UTG acts first
         
         # Log the start of the hand
         self._log_action({
@@ -116,73 +114,45 @@ class GameState:
     
     def _post_blinds_and_antes(self) -> None:
         """Post blinds and antes for all players."""
-        # Post antes if any
+        # Collect antes if any
         if self.ante > 0:
             for player in self.players:
                 if player.stack > 0:
-                    ante_amount = min(self.ante, player.stack)
-                    player.place_bet(ante_amount)
+                    ante_amount = player.place_bet(min(self.ante, player.stack))
                     self.pot += ante_amount
                     
-                    if player.stack == 0:
-                        player.is_all_in = True
-                        logging.debug(f"Player {player.name} is all-in after posting ante")
+                    self._log_action({
+                        "type": "ante",
+                        "player_id": player.player_id,
+                        "amount": ante_amount
+                    })
         
         # Post small blind
         sb_pos = (self.button_pos + 1) % len(self.players)
         sb_player = self.players[sb_pos]
-        
         if sb_player.stack > 0:
-            # If player's stack is less than small blind, they go all-in
-            if sb_player.stack <= self.small_blind:
-                logging.warning(f"Player {sb_player.name} has stack {sb_player.stack} less than small blind {self.small_blind}, going all-in")
-                sb_amount = sb_player.stack
-                sb_player.place_bet(sb_amount)
-                sb_player.is_all_in = True
-            else:
-                sb_amount = self.small_blind
-                sb_player.place_bet(sb_amount)
-                
+            sb_amount = sb_player.place_bet(min(self.small_blind, sb_player.stack))
             self.pot += sb_amount
-            self.current_bet = sb_amount
             
             self._log_action({
-                "type": "post_blind",
+                "type": "small_blind",
                 "player_id": sb_player.player_id,
-                "amount": sb_amount,
-                "blind_type": "small_blind"
+                "amount": sb_amount
             })
         
         # Post big blind
         bb_pos = (self.button_pos + 2) % len(self.players)
         bb_player = self.players[bb_pos]
-        
         if bb_player.stack > 0:
-            # If player's stack is less than big blind, they go all-in
-            if bb_player.stack <= self.big_blind:
-                logging.warning(f"Player {bb_player.name} has stack {bb_player.stack} less than big blind {self.big_blind}, going all-in")
-                bb_amount = bb_player.stack
-                bb_player.place_bet(bb_amount)
-                bb_player.is_all_in = True
-            else:
-                bb_amount = self.big_blind
-                bb_player.place_bet(bb_amount)
-                
+            bb_amount = bb_player.place_bet(min(self.big_blind, bb_player.stack))
             self.pot += bb_amount
             self.current_bet = bb_amount
             
             self._log_action({
-                "type": "post_blind",
+                "type": "big_blind",
                 "player_id": bb_player.player_id,
-                "amount": bb_amount,
-                "blind_type": "big_blind"
+                "amount": bb_amount
             })
-        
-        # Log player stacks after blinds
-        for player in self.players:
-            if player.stack < 20:
-                logging.debug(f"Player {player.name} has low stack: {player.stack} after blinds")
-                logging.debug(f"  - is_active: {player.is_active}, is_all_in: {player.is_all_in}, current_bet: {player.current_bet}")
     
     def _log_action(self, action_data: Dict[str, Any]) -> None:
         """Add an action to the hand history."""
@@ -247,46 +217,17 @@ class GameState:
             
         if not player.is_active:
             raise ValueError(f"Player {player.name} is not active in this hand")
-        
-        # Add detailed logging for low stack situations
-        for p in self.players:
-            if p.stack < 20:
-                logging.debug(f"Player {p.name} has low stack: {p.stack} before action {action.action_type.name}")
-                logging.debug(f"  - is_active: {p.is_active}, is_all_in: {p.is_all_in}, current_bet: {p.current_bet}")
             
-        # Check if player has a very small stack and mark as all-in if needed
-        if player.stack <= 0.001 and player.stack > 0:
-            logging.warning(f"Player {player.name} has a very small stack ({player.stack}), marking as all-in")
-            player.stack = 0
-            player.is_all_in = True
-        
-        # If player's stack is less than the minimum bet/raise, convert to ALL_IN
-        if action.action_type in [ActionType.BET, ActionType.RAISE]:
-            min_amount = self.big_blind
-            if action.action_type == ActionType.RAISE:
-                min_amount = self.current_bet + self.min_raise
-                
-            if player.stack <= min_amount:
-                logging.warning(f"Player {player.name} has stack {player.stack} less than min {action.action_type.name} amount {min_amount}, converting to ALL_IN")
-                action_type = ActionType.ALL_IN
-                action_amount = player.stack
-            else:
-                action_type = action.action_type
-                action_amount = action.amount
-        else:
-            action_type = action.action_type
-            action_amount = action.amount
-        
         # Log the action
         self._log_action({
             "type": "player_action",
             "player_id": player.player_id,
-            "action": action_type.name,
-            "amount": action_amount if action_type not in [ActionType.FOLD, ActionType.CHECK] else 0
+            "action": action.action_type.name,
+            "amount": action.amount if action.action_type not in [ActionType.FOLD, ActionType.CHECK] else 0
         })
         
         # Apply the action
-        if action_type == ActionType.FOLD:
+        if action.action_type == ActionType.FOLD:
             player.fold()
             
             # If only one player remains active, end the hand
@@ -294,10 +235,10 @@ class GameState:
                 self._end_hand()
                 return
             
-        elif action_type == ActionType.CHECK:
+        elif action.action_type == ActionType.CHECK:
             pass
             
-        elif action_type == ActionType.CALL:
+        elif action.action_type == ActionType.CALL:
             call_amount = min(self.current_bet - player.current_bet, player.stack)
             player.place_bet(call_amount)
             self.pot += call_amount
@@ -305,32 +246,29 @@ class GameState:
             # If player used all their stack, they're all-in
             if player.stack == 0:
                 player.is_all_in = True
-                logging.debug(f"Player {player.name} is all-in after CALL")
             
-        elif action_type == ActionType.BET:
-            bet_amount = player.place_bet(min(action_amount, player.stack))
+        elif action.action_type == ActionType.BET:
+            bet_amount = player.place_bet(min(action.amount, player.stack))
             self.pot += bet_amount
             
             # If player used all their stack, they're all-in
             if player.stack == 0:
                 player.is_all_in = True
-                logging.debug(f"Player {player.name} is all-in after BET")
                 
             # Update current bet and minimum raise
             if bet_amount > 0:
                 self.current_bet = player.current_bet
                 self.min_raise = max(self.min_raise, bet_amount)
                 
-        elif action_type == ActionType.RAISE:
+        elif action.action_type == ActionType.RAISE:
             # Calculate raise amount
-            raise_amount = min(action_amount, player.stack)
+            raise_amount = min(action.amount, player.stack)
             player.place_bet(raise_amount)
             self.pot += raise_amount
             
             # If player used all their stack, they're all-in
             if player.stack == 0:
                 player.is_all_in = True
-                logging.debug(f"Player {player.name} is all-in after RAISE")
                 
             # Update current bet and minimum raise
             if player.current_bet > self.current_bet:
@@ -338,11 +276,10 @@ class GameState:
                 self.current_bet = player.current_bet
                 self.min_raise = max(self.min_raise, raise_diff)
             
-        elif action_type == ActionType.ALL_IN:
+        elif action.action_type == ActionType.ALL_IN:
             all_in_amount = player.place_bet(player.stack)
             self.pot += all_in_amount
             player.is_all_in = True  # Explicitly set the all-in flag
-            logging.debug(f"Player {player.name} is ALL_IN with amount {all_in_amount}")
             
             # If this all-in raises the bet
             if player.current_bet > self.current_bet:
@@ -353,12 +290,6 @@ class GameState:
         # Mark that this player has acted in this round
         player.has_acted_this_round = True
         self.players_acted_in_round += 1
-        
-        # Log player states after action
-        for p in self.players:
-            if p.stack < 20:
-                logging.debug(f"Player {p.name} has low stack: {p.stack} after action {action_type.name}")
-                logging.debug(f"  - is_active: {p.is_active}, is_all_in: {p.is_all_in}, current_bet: {p.current_bet}")
         
         # Move to the next player
         self._move_to_next_player()
@@ -393,13 +324,6 @@ class GameState:
             # Reset the counter
             self._loop_counter = 0
             return
-        
-        # First, check if any player has a negative stack (this shouldn't happen, but let's be safe)
-        for player in self.players:
-            if player.stack < 0:
-                logging.warning(f"Player {player.name} has a negative stack: {player.stack}. Setting to 0.")
-                player.stack = 0
-                player.is_all_in = True
         
         # Get the number of active players who can still act
         active_players = [p for p in self.players if p.is_active and not p.is_all_in and p.stack > 0]
@@ -455,16 +379,8 @@ class GameState:
                     self._loop_counter = 0
                     return
             
-            # If this player can act - make sure they have a positive stack
-            if current_player.is_active and not current_player.is_all_in:
-                # Check if player has zero or near-zero stack
-                if current_player.stack <= 0.001:  # Using a small threshold to catch floating point issues
-                    # Player has no chips left, mark them as all-in
-                    logging.debug(f"Player {current_player.name} has stack {current_player.stack}, marking as all-in")
-                    current_player.stack = 0
-                    current_player.is_all_in = True
-                    continue
-                
+            # If this player can act
+            if current_player.is_active and not current_player.is_all_in and current_player.stack > 0:
                 # Check if this player needs to act (hasn't acted or needs to call a bet)
                 if current_player.current_bet < self.current_bet or not current_player.has_acted_this_round:
                     logging.debug(f"Found player {current_player.name} who needs to act")
@@ -505,32 +421,37 @@ class GameState:
     
     def _end_betting_round(self) -> None:
         """End the current betting round and move to the next phase."""
-        # Reset player action flags for the next round
+        # Reset current bet for the next round
+        self.current_bet = 0
         for player in self.players:
-            player.has_acted_this_round = False
-            
-            # Check for players with very small stacks and mark them as all-in
-            if player.stack <= 0.001 and player.stack > 0:
-                logging.debug(f"Player {player.name} has a very small stack ({player.stack}) at end of betting round, marking as all-in")
-                player.stack = 0
-                player.is_all_in = True
+            player.current_bet = 0
+            player.has_acted_this_round = False  # Reset the action flag for the new round
         
         # Reset the players acted counter
         self.players_acted_in_round = 0
-        self.round_started = False
         
         # Move to the next betting round
-        if self.betting_round == BettingRound.PREFLOP:
-            self.betting_round = BettingRound.FLOP
+        current_round = self.betting_round
+        next_round = BettingRound.next_round(current_round)
+        
+        if next_round is None:
+            # End of hand, determine winners
+            self._showdown()
+            return
+        
+        # Update to the next betting round
+        self.betting_round = next_round
+        
+        # Deal community cards based on the new betting round
+        if self.betting_round == BettingRound.FLOP:
             self.community_cards.extend(self.deck.deal(3))
             self._log_action({
                 "type": "deal_community",
-                "cards": [str(card) for card in self.community_cards],
+                "cards": [str(card) for card in self.community_cards[-3:]],
                 "street": "FLOP"
             })
             
-        elif self.betting_round == BettingRound.FLOP:
-            self.betting_round = BettingRound.TURN
+        elif self.betting_round == BettingRound.TURN:
             self.community_cards.extend(self.deck.deal(1))
             self._log_action({
                 "type": "deal_community",
@@ -538,26 +459,13 @@ class GameState:
                 "street": "TURN"
             })
             
-        elif self.betting_round == BettingRound.TURN:
-            self.betting_round = BettingRound.RIVER
+        elif self.betting_round == BettingRound.RIVER:
             self.community_cards.extend(self.deck.deal(1))
             self._log_action({
                 "type": "deal_community",
                 "cards": [str(card) for card in self.community_cards[-1:]],
                 "street": "RIVER"
             })
-            
-        elif self.betting_round == BettingRound.RIVER:
-            # End the hand and determine the winner
-            self._create_side_pots()
-            self._showdown()
-            self._end_hand()
-            return
-        
-        # Reset the current bet for the new betting round
-        self.current_bet = 0
-        for player in self.players:
-            player.current_bet = 0
         
         # Set the first active player after the button
         self.current_player_idx = self.button_pos

@@ -47,6 +47,14 @@ def parse_args():
         help="Preset configuration to use"
     )
     
+    parser.add_argument(
+        "--mode",
+        type=str,
+        choices=["round-robin", "gto-vs-all"],
+        default="gto-vs-all",
+        help="Evaluation mode: round-robin (all vs all) or gto-vs-all (GTO vs each other type)"
+    )
+    
     return parser.parse_args()
 
 
@@ -57,7 +65,8 @@ def get_preset_configs(preset: str) -> List[Dict[str, Any]]:
             {"name": "GTO Balanced", "type": "GTOPlayer", "aggression": 1.0, "bluff_frequency": 0.3},
             {"name": "TAG", "type": "GTOPlayer", "aggression": 1.3, "bluff_frequency": 0.25, "fold_to_3bet": 0.6},
             {"name": "LAG", "type": "GTOPlayer", "aggression": 1.5, "bluff_frequency": 0.4, "fold_to_3bet": 0.4},
-            {"name": "Nit", "type": "GTOPlayer", "aggression": 0.7, "bluff_frequency": 0.1, "fold_to_3bet": 0.8}
+            {"name": "Nit", "type": "GTOPlayer", "aggression": 0.7, "bluff_frequency": 0.1, "fold_to_3bet": 0.8},
+            {"name": "Calling Station", "type": "GTOPlayer", "aggression": 0.9, "call_efficiency": 1.5, "fold_to_3bet": 0.3},
         ],
         "comprehensive": [
             {"name": "GTO Balanced", "type": "GTOPlayer", "aggression": 1.0, "bluff_frequency": 0.3},
@@ -94,15 +103,41 @@ def main():
     evaluator = PerformanceEvaluator(args.output_dir)
     
     # Run evaluation
-    print(f"Starting poker strategy evaluation with {args.preset} preset...")
+    print(f"Starting poker strategy evaluation with {args.preset} preset in {args.mode} mode...")
     print(f"Running {args.num_hands} hands per match, {args.num_trials} trials per matchup")
     print(f"Evaluating {len(player_configs)} different player configurations")
     
-    results, matchups = evaluator.evaluate_player_configs(
-        player_configs, 
-        num_hands=args.num_hands,
-        num_trials=args.num_trials
-    )
+    if args.mode == "gto-vs-all":
+        # Find the GTO player configuration
+        gto_config = None
+        other_configs = []
+        
+        for config in player_configs:
+            if config["name"] == "GTO Balanced":
+                gto_config = config
+            else:
+                other_configs.append(config)
+        
+        if not gto_config:
+            print("Error: GTO Balanced player configuration not found in preset")
+            return
+        
+        # Create a modified list with only GTO vs others matchups
+        modified_configs = [gto_config] + other_configs
+        
+        # Run GTO vs all evaluation
+        results, matchups = evaluator.evaluate_gto_vs_all(
+            modified_configs, 
+            num_hands=args.num_hands,
+            num_trials=args.num_trials
+        )
+    else:
+        # Run round-robin tournament (original behavior)
+        results, matchups = evaluator.evaluate_player_configs(
+            player_configs, 
+            num_hands=args.num_hands,
+            num_trials=args.num_trials
+        )
     
     # Print summary
     print("\nEvaluation Results:")
