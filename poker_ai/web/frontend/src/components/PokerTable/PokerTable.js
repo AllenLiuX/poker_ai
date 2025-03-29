@@ -10,6 +10,8 @@ import BettingRound from '../BettingRound/BettingRound';
 import HandStrength from '../HandStrength/HandStrength';
 import GameSettings from '../GameSettings/GameSettings';
 import HandResult from '../HandResult/HandResult';
+import { API_URL } from '../../Config';
+
 import { 
   RotateCcw, 
   AlertTriangle, 
@@ -42,7 +44,8 @@ function PokerTable({ gameId, humanPlayerId, gameState, onGameStateUpdated, onAc
   
   // Initialize socket connection
   useEffect(() => {
-    const newSocket = io('http://localhost:5001');
+    // const newSocket = io('http://localhost:5001');
+    const newSocket = io(API_URL);
     
     newSocket.on('connect', () => {
       console.log('Connected to server');

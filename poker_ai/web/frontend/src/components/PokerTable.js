@@ -6,6 +6,7 @@ import Card from './Card';
 import PlayerSeat from './PlayerSeat';
 import ActionControls from './ActionControls';
 import GameLog from './GameLog';
+import { API_URL } from '../Config';
 
 const TableContainer = styled.div`
   display: flex;
@@ -124,7 +125,8 @@ function PokerTable({ gameId, humanPlayerId, gameState, onGameStateUpdated }) {
 
   // Initialize socket connection
   useEffect(() => {
-    const newSocket = io('http://localhost:5001');
+    // const newSocket = io('http://localhost:5001');
+    const newSocket = io(API_URL);
     
     newSocket.on('connect', () => {
       console.log('Connected to server');

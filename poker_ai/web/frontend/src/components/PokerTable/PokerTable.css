@@ -3,8 +3,9 @@
   flex-direction: column;
   width: 100%;
   height: 100vh;
-  background-color: #f5f5f5;
+  background-color: #1a1a2e;
   font-family: 'Roboto', sans-serif;
+  overflow: hidden;
 }
 
 .table-header {
@@ -15,6 +16,8 @@
   background-color: #16213e;
   color: white;
   border-bottom: 1px solid #0f3460;
+  min-height: 60px;
+  z-index: 10;
 }
 
 .table-status {
@@ -45,6 +48,8 @@
   display: flex;
   flex: 1;
   overflow: hidden;
+  position: relative;
+  min-height: 0;
 }
 
 .left-sidebar, .right-sidebar {
@@ -53,6 +58,8 @@
   color: white;
   padding: 15px;
   overflow-y: auto;
+  flex-shrink: 0;
+  max-height: calc(100vh - 180px);
 }
 
 .game-info {
@@ -110,6 +117,8 @@
   box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3), inset 0 0 60px rgba(0, 0, 0, 0.3);
   border: 15px solid #16213e;
   overflow: hidden;
+  min-height: 400px;
+  max-height: calc(100vh - 280px);
 }
 
 .player-position {
@@ -124,7 +133,7 @@
   transform: translate(-50%, -50%);
   display: flex;
   gap: 10px;
-  z-index: 5;
+  z-index: 20;
 }
 
 .pot-display-container {
@@ -139,6 +148,10 @@
   padding: 15px;
   background-color: #16213e;
   border-top: 1px solid #0f3460;
+  min-height: 100px;
+  max-height: 200px;
+  overflow-y: auto;
+  z-index: 10;
 }
 
 /* Responsive adjustments */
@@ -160,5 +173,94 @@
   
   .poker-table {
     height: 500px;
+    max-height: 500px;
+  }
+  
+  .table-footer {
+    max-height: 250px;
+  }
+}
+
+/* Mobile-specific styles */
+@media (max-width: 768px) {
+  .table-layout {
+    flex-direction: column;
+  }
+  
+  .left-sidebar, .right-sidebar {
+    width: 100%;
+    max-height: 150px;
+    overflow-y: auto;
+  }
+  
+  .poker-table {
+    height: 400px;
+    min-height: 300px;
+    max-height: 400px;
+    margin: 10px;
+    border-width: 10px;
+  }
+  
+  .table-footer {
+    padding: 10px;
+    min-height: 80px;
+  }
+  
+  .community-cards {
+    gap: 5px;
+  }
+  
+  .player-position {
+    transform: scale(0.85);
+  }
+  
+  .action-controls {
+    padding: 8px;
+  }
+  
+  .action-button {
+    padding: 6px 10px;
+    font-size: 0.8rem;
+  }
+  
+  .bet-control-row {
+    flex-wrap: wrap;
+    justify-content: space-between;
+  }
+  
+  .bet-amount-display {
+    min-width: 80px;
+    margin-bottom: 5px;
+  }
+  
+  .bet-slider-container {
+    width: 100%;
+    margin: 5px 0;
+  }
+  
+  .range-label {
+    font-size: 0.7rem;
+  }
+  
+  .increment-button {
+    min-width: 28px;
+    padding: 3px;
+  }
+  
+  .pot-display-container {
+    top: 25%;
+    z-index: 5;
+  }
+}
+
+/* Mobile-specific adjustments for card positions */
+@media (max-width: 768px) {
+  .community-cards {
+    top: 40%;
+  }
+  
+  /* Adjust the bottom player position (human player) */
+  .player-position:nth-child(7) {
+    top: 90% !important;
   }
 }

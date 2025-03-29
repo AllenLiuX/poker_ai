@@ -225,3 +225,56 @@
     transform: rotate(360deg);
   }
 }
+
+/* Mobile-specific styles */
+@media (max-width: 768px) {
+  .player-seat {
+    padding: 8px;
+    width: 140px;
+    transform: scale(0.85);
+  }
+  
+  .player-info {
+    gap: 5px;
+  }
+  
+  .player-avatar {
+    width: 30px;
+    height: 30px;
+  }
+  
+  .player-name {
+    font-size: 0.85rem;
+  }
+  
+  .player-stack {
+    font-size: 0.85rem;
+  }
+  
+  .player-cards {
+    gap: 3px;
+    margin-top: 5px;
+  }
+  
+  .player-action {
+    font-size: 0.8rem;
+    padding: 3px 6px;
+    margin-top: 5px;
+  }
+  
+  .player-bet {
+    font-size: 0.8rem;
+    padding: 2px 5px;
+  }
+  
+  .dealer-button {
+    width: 20px;
+    height: 20px;
+    font-size: 0.7rem;
+  }
+  
+  .player-status {
+    font-size: 0.75rem;
+    padding: 3px 6px;
+  }
+}

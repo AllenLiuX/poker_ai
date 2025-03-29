@@ -123,3 +123,34 @@
   display: flex;
   justify-content: center;
 }
+
+/* Mobile-specific styles */
+@media (max-width: 768px) {
+  .card {
+    width: 45px;
+    height: 63px;
+  }
+  
+  .card-corner {
+    padding: 2px;
+    font-size: 0.9em;
+  }
+  
+  .top-left {
+    top: 1px;
+    left: 1px;
+  }
+  
+  .bottom-right {
+    bottom: 1px;
+    right: 1px;
+  }
+  
+  .card-center {
+    font-size: 1.5em;
+  }
+  
+  .card-back {
+    background-size: 12px 12px;
+  }
+}

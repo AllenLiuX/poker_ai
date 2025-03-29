@@ -69,3 +69,37 @@
   margin-top: 5px;
   opacity: 0.8;
 }
+
+/* Mobile-specific styles */
+@media (max-width: 768px) {
+  .pot-display {
+    padding: 8px;
+    min-width: 120px;
+    transform: scale(0.85);
+    background-color: rgba(15, 52, 96, 0.7);
+  }
+  
+  .pot-label {
+    font-size: 0.8rem;
+    gap: 4px;
+    margin-bottom: 2px;
+  }
+  
+  .pot-amount {
+    font-size: 1.3rem;
+  }
+  
+  .side-pots {
+    gap: 5px;
+    margin-top: 3px;
+    padding-top: 5px;
+  }
+  
+  .side-pot-label {
+    font-size: 0.75rem;
+  }
+  
+  .side-pot-amount {
+    font-size: 1rem;
+  }
+}

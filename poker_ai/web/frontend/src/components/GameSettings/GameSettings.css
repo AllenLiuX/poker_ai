@@ -21,14 +21,16 @@
 .settings-panel {
   position: absolute;
   top: 100%;
-  right: 0;
+  left: 0;
   width: 300px;
+  max-height: 80vh;
+  overflow-y: auto;
   background-color: #16213e;
   border-radius: 10px;
   box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
   padding: 15px;
   margin-top: 10px;
-  z-index: 100;
+  z-index: 1000;
 }
 
 .settings-title {

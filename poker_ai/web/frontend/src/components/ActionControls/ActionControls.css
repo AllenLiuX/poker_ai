@@ -1,28 +1,39 @@
 .action-controls {
   background-color: #16213e;
   border-radius: 10px;
-  padding: 20px;
+  padding: 12px;
   box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
 }
 
 .action-title {
   color: #e94560;
   margin-top: 0;
-  margin-bottom: 15px;
+  margin-bottom: 8px;
   text-align: center;
+  font-size: 1rem;
 }
 
 .action-buttons {
   display: flex;
   flex-direction: column;
-  gap: 10px;
+  gap: 8px;
+}
+
+.basic-actions {
+  display: flex;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+.basic-actions .action-button {
+  flex: 1;
 }
 
 .action-button {
-  padding: 12px 20px;
+  padding: 8px 12px;
   border: none;
   border-radius: 5px;
-  font-size: 1rem;
+  font-size: 0.9rem;
   font-weight: bold;
   cursor: pointer;
   transition: all 0.2s;
@@ -30,7 +41,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 8px;
+  gap: 6px;
 }
 
 .action-button:hover {
@@ -59,103 +70,237 @@
 }
 
 .check:hover {
-  background-color: #3db390;
+  background-color: #4ecca3;
+  color: #16213e;
 }
 
 .call {
-  background-color: #ffbd69;
+  background-color: #4ecca3;
   color: #16213e;
 }
 
 .call:hover {
-  background-color: #f0ad55;
+  background-color: #3db390;
 }
 
 .bet, .raise {
-  background-color: #0f3460;
+  background-color: #1a1a2e;
 }
 
 .bet:hover, .raise:hover {
-  background-color: #0a2a4e;
+  background-color: #1a1a3f;
 }
 
 .all-in {
-  background-color: #7b2cbf;
+  background-color: #e94560;
+  animation: pulse 1.5s infinite;
 }
 
-.all-in:hover {
-  background-color: #6a24a6;
+@keyframes pulse {
+  0% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.05);
+  }
+  100% {
+    transform: scale(1);
+  }
 }
 
 .bet-control {
   display: flex;
   flex-direction: column;
-  gap: 10px;
+  gap: 8px;
+  background-color: #0f3460;
+  padding: 8px;
+  border-radius: 5px;
 }
 
-.slider-container {
+.bet-control-row {
   display: flex;
-  flex-direction: column;
+  justify-content: space-between;
   align-items: center;
-  gap: 5px;
+  gap: 8px;
+}
+
+.bet-amount-display {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  min-width: 120px;
+}
+
+.bet-label {
+  color: #e0e0e0;
+  font-size: 0.85rem;
+}
+
+.bet-amount {
+  color: #e94560;
+  font-size: 1.1rem;
+  font-weight: bold;
+}
+
+.bet-slider-container {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.range-label {
+  color: #e0e0e0;
+  font-size: 0.75rem;
+  white-space: nowrap;
 }
 
 .bet-slider {
-  width: 100%;
-  height: 10px;
   -webkit-appearance: none;
   appearance: none;
-  background: #0f3460;
-  outline: none;
+  flex: 1;
+  height: 8px;
   border-radius: 5px;
+  background: #16213e;
+  outline: none;
 }
 
 .bet-slider::-webkit-slider-thumb {
   -webkit-appearance: none;
   appearance: none;
-  width: 20px;
-  height: 20px;
+  width: 18px;
+  height: 18px;
   border-radius: 50%;
   background: #e94560;
   cursor: pointer;
 }
 
 .bet-slider::-moz-range-thumb {
-  width: 20px;
-  height: 20px;
+  width: 18px;
+  height: 18px;
   border-radius: 50%;
   background: #e94560;
   cursor: pointer;
-  border: none;
 }
 
-.bet-amount {
-  font-size: 1.2rem;
-  font-weight: bold;
-  color: #e94560;
+.bet-increment-buttons {
+  display: flex;
+  gap: 4px;
+}
+
+.increment-button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #16213e;
+  border: 1px solid #0f3460;
+  border-radius: 5px;
+  padding: 4px;
+  color: white;
+  font-size: 0.75rem;
+  cursor: pointer;
+  transition: all 0.2s;
+  min-width: 32px;
+}
+
+.increment-button:hover:not(:disabled) {
+  background-color: #1a1a2e;
+  transform: translateY(-2px);
+}
+
+.increment-button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
 }
 
 .loading-indicator {
-  text-align: center;
-  margin-top: 10px;
-  color: #e2e2e2;
-  font-style: italic;
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 10px;
+  justify-content: center;
+  padding: 15px;
+  color: white;
 }
 
 .spinner {
-  animation: spin 1.5s linear infinite;
-  color: #e94560;
+  animation: spin 1s linear infinite;
+  margin-bottom: 8px;
 }
 
 @keyframes spin {
-  0% {
-    transform: rotate(0deg);
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+/* Mobile-specific styles */
+@media (max-width: 768px) {
+  .action-controls {
+    padding: 8px;
   }
-  100% {
-    transform: rotate(360deg);
+  
+  .action-title {
+    font-size: 0.9rem;
+    margin-bottom: 6px;
+  }
+  
+  .action-buttons {
+    gap: 6px;
+  }
+  
+  .basic-actions {
+    flex-wrap: wrap;
+    gap: 5px;
+  }
+  
+  .basic-actions .action-button {
+    flex: 1;
+    min-width: calc(50% - 5px);
+    padding: 6px 8px;
+    font-size: 0.8rem;
+  }
+  
+  .action-button {
+    padding: 6px 8px;
+    font-size: 0.8rem;
+    gap: 4px;
+  }
+  
+  .bet-control {
+    padding: 6px;
+    gap: 6px;
+  }
+  
+  .bet-control-row {
+    flex-wrap: wrap;
+    gap: 6px;
+  }
+  
+  .bet-amount-display {
+    width: 100%;
+    justify-content: space-between;
+  }
+  
+  .bet-label {
+    font-size: 0.8rem;
+  }
+  
+  .bet-amount {
+    font-size: 1rem;
+  }
+  
+  .bet-slider-container {
+    width: 100%;
+    order: 1;
+  }
+  
+  .bet-increment-buttons {
+    order: 2;
+  }
+  
+  .action-button.bet,
+  .action-button.raise {
+    width: 100%;
+    order: 3;
+    margin-top: 5px;
   }
 }
