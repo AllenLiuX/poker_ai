@@ -6,6 +6,7 @@ import uuid
 import json
 import os
 import sys
+import ssl
 
 # Add the project root to the path so we can import the poker_ai modules
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '../../..')))
@@ -306,11 +307,12 @@ def handle_disconnect():
     print('Client disconnected')
 
 if __name__ == '__main__':
-    # socketio.run(app, host='0.0.0.0', port=5001, debug=True)
+    # Run with SSL using gevent server
     socketio.run(
         app, 
         host='0.0.0.0', 
         port=5001, 
         debug=True,
-        ssl_context=('/home/ec2-user/poker_ai/ssl/cert.pem', '/home/ec2-user/poker_ai/ssl/key.pem')
+        keyfile='/home/ec2-user/poker_ai/ssl/key.pem',
+        certfile='/home/ec2-user/poker_ai/ssl/cert.pem'
     )
