@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import axios from 'axios';
+import { API_URL } from '../../Config';
 import './GameSetup.css';
 
 function GameSetup({ onGameCreated }) {
@@ -29,7 +30,7 @@ function GameSetup({ onGameCreated }) {
     setError(null);
     
     try {
-      const response = await axios.post('/api/game/new', formData);
+      const response = await axios.post(`${API_URL}/game/new`, formData);
       onGameCreated(response.data);
     } catch (err) {
       console.error('Error creating game:', err);

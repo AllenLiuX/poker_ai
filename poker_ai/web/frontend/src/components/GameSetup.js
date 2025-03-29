@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import axios from 'axios';
 import styled from 'styled-components';
+import { API_URL } from '../Config';
 
 const SetupContainer = styled.div`
   background-color: #16213e;
@@ -115,7 +116,7 @@ function GameSetup({ onGameCreated }) {
     setError(null);
     
     try {
-      const response = await axios.post('/api/game/new', formData);
+      const response = await axios.post(`${API_URL}/game/new`, formData);
       onGameCreated(response.data);
     } catch (err) {
       console.error('Error creating game:', err);

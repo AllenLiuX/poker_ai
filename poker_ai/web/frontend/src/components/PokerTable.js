@@ -175,7 +175,7 @@ function PokerTable({ gameId, humanPlayerId, gameState, onGameStateUpdated }) {
 
   const fetchGameState = async () => {
     try {
-      const response = await axios.get(`/api/game/${gameId}/state`);
+      const response = await axios.get(`${API_URL}/game/${gameId}/state`);
       onGameStateUpdated(response.data.state);
     } catch (err) {
       console.error('Error fetching game state:', err);
@@ -188,7 +188,7 @@ function PokerTable({ gameId, humanPlayerId, gameState, onGameStateUpdated }) {
     setError(null);
     
     try {
-      const response = await axios.post(`/api/game/${gameId}/action`, {
+      const response = await axios.post(`${API_URL}/game/${gameId}/action`, {
         action_type: actionType,
         amount: amount
       });
