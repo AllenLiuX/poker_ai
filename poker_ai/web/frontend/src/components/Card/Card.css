@@ -189,4 +189,40 @@
   .card-center {
     color: #ffffff;
   }
+  
+  /* Special styling for human player cards */
+  .player-position:nth-child(7) .hole-cards {
+    display: flex;
+    flex-direction: row !important;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+    margin-top: 5px;
+    width: 100%;
+  }
+
+  .player-position:nth-child(7) .hole-cards .card {
+    width: 45px;
+    height: 65px;
+    display: inline-block !important;
+    vertical-align: middle;
+    border: 2px solid #4CAF50;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.5);
+    margin: 0 3px !important;
+    transform: scale(1.2);
+    transform-origin: bottom center;
+  }
+
+  /* Ensure card corners are visible */
+  .player-position:nth-child(7) .card-corner {
+    padding: 2px;
+  }
+
+  .player-position:nth-child(7) .card-rank {
+    font-size: 14px;
+  }
+
+  .player-position:nth-child(7) .suit-symbol {
+    font-size: 14px;
+  }
 }

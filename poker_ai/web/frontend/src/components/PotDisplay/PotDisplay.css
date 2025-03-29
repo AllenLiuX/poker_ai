@@ -70,6 +70,34 @@
   opacity: 0.8;
 }
 
+/* Simplified pot display for mobile */
+.pot-display-simple {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 5px;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 40;
+  background-color: rgba(0, 0, 0, 0.6);
+  padding: 8px 12px;
+  border-radius: 20px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.4);
+}
+
+.pot-icon {
+  color: #4CAF50;
+}
+
+.pot-amount-simple {
+  font-size: 1.5rem;
+  font-weight: bold;
+  color: #4CAF50;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.5);
+}
+
 /* Mobile-specific styles */
 @media (max-width: 768px) {
   .pot-display {
@@ -110,6 +138,23 @@
   
   .pot-eligible {
     font-size: 0.7rem;
+  }
+  
+  /* Simplified pot display for mobile */
+  .pot-display-simple {
+    padding: 6px 10px;
+    border-radius: 16px;
+    background-color: rgba(0, 0, 0, 0.7);
+    border: 1px solid #4CAF50;
+  }
+  
+  .pot-icon {
+    width: 18px;
+    height: 18px;
+  }
+  
+  .pot-amount-simple {
+    font-size: 1.3rem;
   }
 }
 

@@ -299,24 +299,58 @@
   
   /* Special styling for human player */
   .player-position:nth-child(7) .player-seat {
-    width: 130px;
+    width: 140px;
     padding: 10px;
     background-color: rgba(33, 33, 33, 0.9);
     border: 2px solid #4CAF50;
+    position: relative;
+    bottom: 10px; /* Move the player seat up a bit */
   }
   
+  /* Fix for the human player's cards */
   .player-position:nth-child(7) .player-cards {
     display: flex;
-    flex-direction: row;
+    flex-direction: row !important; /* Force cards to be side by side */
     justify-content: center;
-    gap: 5px;
+    align-items: center;
+    gap: 10px; /* Increase gap between cards for better visibility */
     margin-top: 8px;
+    position: relative;
+    z-index: 50; /* Ensure cards are above other elements */
+    width: 100%;
   }
   
-  .player-position:nth-child(7) .card-container {
-    transform: scale(1.1);
+  /* Make human player's cards larger and more visible */
+  .player-position:nth-child(7) .card {
+    transform: scale(1.2);
     transform-origin: bottom center;
     margin-bottom: 5px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.5);
+    border: 1px solid #4CAF50;
+    display: inline-block !important;
+    margin: 0 3px !important;
+  }
+  
+  /* Position the human player's cards at the bottom of the screen */
+  .player-position:nth-child(7) {
+    position: absolute;
+    bottom: 5px !important;
+    left: 50% !important;
+    transform: translateX(-50%);
+    z-index: 100;
+    width: auto;
+    text-align: center;
+  }
+  
+  /* Ensure the human player's cards are centered and side by side */
+  .player-position:nth-child(7) .hole-cards {
+    display: flex !important;
+    flex-direction: row !important;
+    justify-content: center !important;
+    align-items: center !important;
+    gap: 10px !important;
+    margin: 10px auto !important;
+    width: 100% !important;
   }
   
   /* Ensure cards are fully visible */
@@ -328,8 +362,9 @@
   /* Make sure hole cards are visible and not cut off */
   .hole-cards {
     display: flex;
+    flex-direction: row !important;
     justify-content: center;
-    gap: 5px;
+    gap: 8px;
     margin-top: 5px;
     position: relative;
     z-index: 10;

@@ -128,7 +128,7 @@
 
 .community-cards {
   position: absolute;
-  top: 55%;
+  top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
   display: flex;
@@ -138,9 +138,9 @@
 
 .pot-display-container {
   position: absolute;
-  top: 25%;
+  top: 35%;
   left: 50%;
-  transform: translate(-50%, -50%);
+  transform: translateX(-50%);
   z-index: 25;
 }
 
@@ -183,8 +183,31 @@
 
 /* Mobile-specific styles */
 @media (max-width: 768px) {
-  .table-layout {
-    flex-direction: column;
+  .poker-table {
+    width: 100vw;
+    height: 100vw;
+    max-width: 500px;
+    max-height: 500px;
+    border-radius: 50%;
+    padding: 10px;
+  }
+  
+  .community-cards {
+    gap: 5px;
+    transform: translate(-50%, -50%) scale(0.85);
+  }
+  
+  .pot-display-container {
+    top: 38%; /* Position the pot display above the community cards */
+    z-index: 40; /* Ensure it's above the community cards */
+  }
+  
+  /* Make sure the pot display is visible on mobile */
+  .pot-display-simple {
+    background-color: rgba(0, 0, 0, 0.7);
+    border: 1px solid #4CAF50;
+    padding: 5px 10px;
+    border-radius: 15px;
   }
   
   .left-sidebar, .right-sidebar {
@@ -286,9 +309,11 @@
   }
   
   .player-position:nth-child(7) { /* Human player (bottom) */
+    position: absolute;
     left: 50% !important;
-    top: 85% !important;
-    transform: scale(0.9); /* Make human player slightly larger */
+    bottom: 5px !important;
+    top: auto !important; /* Override any top positioning */
+    transform: translateX(-50%); /* Center horizontally */
     z-index: 30; /* Ensure human player is above other elements */
   }
   

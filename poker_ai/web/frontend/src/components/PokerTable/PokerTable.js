@@ -295,7 +295,6 @@ function PokerTable({ gameId, humanPlayerId, gameState, onGameStateUpdated, onAc
           <div className="pot-display-container">
             <PotDisplay 
               mainPot={gameState.pot || 0}
-              sidePots={[]}
             />
           </div>
         </div>
