@@ -81,3 +81,7 @@ You can extend the web interface in several ways:
 - If the frontend fails to start, ensure Node.js and npm are properly installed
 - If you encounter CORS issues, verify that the backend is running on port 5000
 - For WebSocket connection problems, check your browser's console for error messages
+
+
+## Deployment
+Local: in package.json, set proxy to http://localhost:5001
