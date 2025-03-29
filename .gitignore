@@ -26,3 +26,4 @@ poker_ai/web/backend/.env.local
 .vscode/
 *.swp
 *.swo
+*.pem

@@ -313,6 +313,8 @@ if __name__ == '__main__':
         host='0.0.0.0', 
         port=5001, 
         debug=True,
-        keyfile='/home/ec2-user/poker_ai/ssl/key.pem',
-        certfile='/home/ec2-user/poker_ai/ssl/cert.pem'
+        # keyfile='/home/ec2-user/poker_ai/ssl/key.pem',
+        # certfile='/home/ec2-user/poker_ai/ssl/cert.pem',
+        keyfile='/etc/letsencrypt/live/aico-music.com/privkey.pem',
+        certfile='/etc/letsencrypt/live/aico-music.com/fullchain.pem',
     )
