@@ -306,4 +306,11 @@ def handle_disconnect():
     print('Client disconnected')
 
 if __name__ == '__main__':
-    socketio.run(app, host='0.0.0.0', port=5001, debug=True)
+    # socketio.run(app, host='0.0.0.0', port=5001, debug=True)
+    socketio.run(
+        app, 
+        host='0.0.0.0', 
+        port=5001, 
+        debug=True,
+        ssl_context=('/home/ec2-user/poker_ai/ssl/cert.pem', '/home/ec2-user/poker_ai/ssl/key.pem')
+    )
