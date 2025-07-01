@@ -307,14 +307,50 @@ def handle_disconnect():
     print('Client disconnected')
 
 if __name__ == '__main__':
-    # Run with SSL using gevent server
-    socketio.run(
-        app, 
-        host='0.0.0.0', 
-        port=5001, 
-        debug=True,
-        # keyfile='/home/ec2-user/poker_ai/ssl/key.pem',
-        # certfile='/home/ec2-user/poker_ai/ssl/cert.pem',
-        keyfile='/etc/letsencrypt/live/aico-music.com/privkey.pem',
-        certfile='/etc/letsencrypt/live/aico-music.com/fullchain.pem',
+    """Run the Socket.IO server.
+
+    In production we want to serve the application over HTTPS using the
+    LetsEncrypt certificates provisioned on the host. When developing or when
+    the current user does not have permission to read those certificate files
+    (which is very common when running as a non-root user), we gracefully
+    fall back to HTTP so that the application can still be started without
+    crashing.
+    """
+    host = os.environ.get('HOST', '0.0.0.0')
+    port = int(os.environ.get('PORT', 5001))
+    debug = os.environ.get('FLASK_DEBUG', 'true').lower() == 'true'
+
+    # Default certificate locations – can be overridden with environment vars
+    key_path = os.environ.get('SSL_KEY_PATH', '/etc/letsencrypt/live/aico-music.com/privkey.pem')
+    cert_path = os.environ.get('SSL_CERT_PATH', '/etc/letsencrypt/live/aico-music.com/fullchain.pem')
+
+    # Determine if we can read the certificate files
+    use_ssl = (
+        os.path.exists(key_path)
+        and os.path.exists(cert_path)
+        and os.access(key_path, os.R_OK)
+        and os.access(cert_path, os.R_OK)
     )
+
+    if use_ssl:
+        print(f"Starting server with SSL – cert: {cert_path}, key: {key_path}")
+        socketio.run(
+            app,
+            host=host,
+            port=port,
+            debug=debug,
+            allow_unsafe_werkzeug=True,
+            keyfile=key_path,
+            certfile=cert_path,
+        )
+    else:
+        print("SSL certificates not found or unreadable – starting server **without** SSL.\n"
+              "This is expected when running locally. In production make sure the\n"
+              "application has permission to read the certificate files.")
+        socketio.run(
+            app,
+            host=host,
+            port=port,
+            debug=debug,
+            allow_unsafe_werkzeug=True,
+        )
